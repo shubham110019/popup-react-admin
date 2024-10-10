@@ -1,0 +1,113 @@
+/*! CSS Used from: https://demo.dashboardpack.com/cryptocurrency-html/css/bootstrap1.min.css */
+*,::after,::before{box-sizing:border-box;}
+ul{padding-left:2rem;}
+ul{margin-top:0;margin-bottom:1rem;}
+ul ul{margin-bottom:0;}
+a{color:#0d6efd;text-decoration:underline;}
+a:hover{color:#0a58ca;}
+img{vertical-align:middle;}
+.d-flex{display:flex!important;}
+.justify-content-between{justify-content:space-between!important;}
+@media (min-width:992px){
+.d-lg-none{display:none!important;}
+}
+/*! CSS Used from: https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/themify-icons.css */
+[class^=ti-]{font-family:themify;speak:none;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+.ti-close:before{content:"\e646";}
+/*! CSS Used from: https://demo.dashboardpack.com/cryptocurrency-html/css/metisMenu.css */
+.metismenu .mm-collapse:not(.mm-show){display:none;}
+.metismenu .has-arrow{position:relative;}
+.metismenu .has-arrow::after{position:absolute;content:'';transform:rotate(-90deg) translate(0,-50%);transform-origin:top;top:50%;transition:all .3s ease-out;right:40px;content:"\e64b";font-family:themify;color:#a5adc6;font-weight:600;font-size:14px;}
+/*! CSS Used from: https://demo.dashboardpack.com/cryptocurrency-html/css/style1.css */
+:focus{outline:-webkit-focus-ring-color auto 0;}
+a{text-decoration:none;-webkit-transition:.5s;transition:.5s;}
+a:hover{text-decoration:none;}
+li{list-style:none;}
+ul{margin:0;padding:0;}
+a:focus{text-decoration:none;outline:none;box-shadow:none;-webkit-transition:1s;transition:1s;}
+.sidebar{height:100vh;left:0;top:0;z-index:99;padding-bottom:50px;position:fixed;width:270px;z-index:999;overflow:hidden;overflow-y:auto;background:#fff;box-shadow:0 12px 30px rgba(80,143,244,.1);transition:.3s;}
+.sidebar .small_logo{display:none;}
+@media (max-width:991px){
+.sidebar{left:-280px;-webkit-transition:.5s;transition:.5s;top:0;width:280px;background:#fff;}
+}
+@media only screen and (min-width:992px) and (max-width:1200px){
+.sidebar{width:20%;}
+}
+.sidebar .logo{margin:0;background:#efefef;padding:24px;margin-bottom:0;}
+.sidebar .logo .large_logo img{width:100%;}
+@media (max-width:991px){
+.sidebar .logo{padding:30px;}
+}
+.sidebar_close_icon i{width:40px;height:40px;display:inline-block;text-align:center;line-height:40px;position:absolute;right:30px;font-size:25px;top:29px;cursor:pointer;color:#222;}
+.sidebar #sidebar_menu>li{margin-left:0;}
+.sidebar #sidebar_menu>li a{font-size:16px;font-weight:300;color:#8f91aa;padding:0 25px 0 0;background:#fff;transition:.3s;position:relative;z-index:0;display:grid;grid-template-columns:24px auto;grid-gap:15px;align-items:center;position:relative;background:0 0;color:#8f91aa;font-family:merriweather sans,sans-serif;padding:10px 10px 10px 26px;background:#fff;border-radius:0;}
+.sidebar #sidebar_menu>li a:hover{color:#68657d!important;background:#efefef;}
+.sidebar #sidebar_menu>li a::after{color:#fff;transform:rotate(-90deg) translate(0,-50%);opacity:1;font-size:10px;right:15px;color:#a1a4b9;}
+.sidebar #sidebar_menu>li a:hover::before{width:6px;opacity:1;visibility:visible;}
+.sidebar #sidebar_menu>li>a{color:#8f91aa;}
+.sidebar #sidebar_menu>li ul{padding:0 0 5px 40px;background:0 0;border-radius:0 0 4px 4px;margin-left:0;background:#fff;}
+.sidebar #sidebar_menu>li ul li:last-child a{padding-bottom:30px;}
+.sidebar #sidebar_menu>li ul li a{font-size:14px;color:#8f91aa;font-weight:400;padding:0;white-space:nowrap;padding:0;padding:10px 0 10px 8px!important;margin-top:0;margin-left:0;text-transform:capitalize;}
+.sidebar #sidebar_menu>li ul li a::before{display:none;}
+.sidebar #sidebar_menu>li ul li a:hover{background:0 0;color:#3d3e50!important;}
+.sidebar::-webkit-scrollbar-track{background-color:#ddd;}
+.sidebar::-webkit-scrollbar{width:6px;background-color:#ddd;}
+.sidebar::-webkit-scrollbar-thumb{background-color:#f8dbdd;}
+@media only screen and (min-width:992px) and (max-width:1200px){
+.metismenu .has-arrow::after{right:25px;}
+}
+.sidebar #sidebar_menu li a img{width:19px;height:auto;}
+.sidebar.dark_sidebar{background:#0f1a34;}
+.sidebar.dark_sidebar .logo{background:#182444;}
+.sidebar.dark_sidebar #sidebar_menu>li ul{background:#091023;}
+.sidebar.dark_sidebar #sidebar_menu>li>a:hover{background:#091023;color:#acb6c4!important;}
+.sidebar.dark_sidebar #sidebar_menu>li>a{color:#fff;background:0 0;}
+.sidebar.dark_sidebar #sidebar_menu>li ul li a:hover{background:#091023!important;color:#fff!important;}
+.sidebar.dark_sidebar #sidebar_menu>li ul li a{color:#acb6c4;background:0 0;}
+.sidebar.dark_sidebar #sidebar_menu>li{margin-left:0;margin-right:0;}
+.sidebar.dark_sidebar #sidebar_menu>li a::after{color:#fff;}
+/*! CSS Used fontfaces */
+
+
+.sidebar.mini_sidebar {
+    width: 136px;
+    z-index: 1;
+    overflow: visible !important;
+    min-width: 136px;
+    max-width: 136px;
+    position: absolute;
+    z-index: 9999999;
+    height: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.sidebar.mini_sidebar #sidebar_menu>li>a .nav_title, .sidebar.mini_sidebar.dark_sidebar #sidebar_menu>li a::after {
+    display: none;
+}
+
+.sidebar.mini_sidebar .small_logo{
+display: block !important;
+}
+
+.sidebar.mini_sidebar .large_logo{
+display: none !important;
+}
+
+.sidebar.mini_sidebar #sidebar_menu>li>a .nav_icon_small {
+    width: 136px;
+}
+
+.sidebar.mini_sidebar #sidebar_menu>li>a{
+    text-align: center;
+    display: block;
+    padding: 10px 0;
+}
+
+
+.main_content.full_main_content {
+    padding-left: 136px;
+}
+
+@font-face{font-family:themify;src:url(https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/fonts/themify.eot?-fvbane);src:url(https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/fonts/themify.eot?#iefix-fvbane) format('embedded-opentype'),url(https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/fonts/themify.woff?-fvbane) format('woff'),url(https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/fonts/themify.ttf?-fvbane) format('truetype'),url(https://demo.dashboardpack.com/cryptocurrency-html/vendors/themefy_icon/fonts/themify.svg?-fvbane#themify) format('svg');font-weight:400;font-style:normal;}

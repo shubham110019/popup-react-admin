@@ -1,0 +1,177 @@
+// src/Profile.js
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import Sidemenu from "./comonent/Sidemenu";
+import "../../css/user/content.css";
+import Topbar from "./comonent/Topbar";
+
+const Createpopup = () => {
+  const navigate = useNavigate();
+
+  const [htmlfrm, setHtmlfrm] = useState("");  // For user input HTML
+  const [html, setHtml] = useState("");        // Full HTML with #popid
+  const [js, setJs] = useState("");
+  const [css, setCss] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [userId, setUserId] = useState("");
+  const [popid, setPopid] = useState("");
+
+  const [name, setName] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      userApi(token);
+    }
+  }, [navigate]);
+
+  const logout = () => {
+    Cookies.remove("token");
+    navigate("/login");
+  };
+
+  const userApi = async (token) => {
+    try {
+      const response = await fetch("http://localhost:9000/api/auth/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const data = await response.json();
+
+      if (data.user) {
+        setUserId(data.user.userId);
+        setName(data.user.name);
+        setLastname(data.user.lastname);
+        setEmail(data.user.email);
+      } else {
+        console.error("User data not found");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      navigate("/login");
+    }
+  };
+
+  const popupSubmit = async (e) => {
+    e.preventDefault();
+
+    // Wrap the form HTML inside a new div with the unique #popid
+    const finalHtml = `<div class="Campaign CampaignType--popup" id="om-${popid}"><div class="mendon-c-canvas Campaign__canvas" id="om-${popid}-optin"><span class="close-btn" id="closePopup">×</span> ${htmlfrm}</div></div>`;
+    setHtml(finalHtml);
+
+    try {
+      const response = await fetch("http://localhost:9000/api/modal/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, html: finalHtml, css, js, popid }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Popup successfully submitted!");
+        // Clear form inputs after successful submission
+        setHtmlfrm("");
+        setCss("");
+        setJs("");
+      } else {
+        setMessage(data.message || "Failed to submit popup.");
+      }
+    } catch (error) {
+      setMessage("An error occurred during submission. Please try again.");
+    }
+  };
+
+  const generateRandomString = (length) => {
+    const characters = "abcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+
+  useEffect(() => {
+    setPopid(generateRandomString(10));
+  }, []);
+
+  return (
+    <div>
+
+<div className='main__content'>
+
+<Topbar/>
+         
+
+        <div className="container-fluid g-0">
+
+
+          {message && <p>{message}</p>}
+          <form onSubmit={popupSubmit}>
+            <div class="form-group">
+              <label htmlFor="userId">User ID</label>
+              <input type="text" class="form-control" value={userId} readOnly />
+            </div>
+
+            <div class="form-group">
+              <label htmlFor="popupId">Popup ID</label>
+              <input type="text" class="form-control" value={popid} readOnly />
+            </div>
+
+            <div class="form-group">
+              <label>Html Content</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                value={htmlfrm}
+                onChange={(e) => setHtmlfrm(e.target.value)}
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>CSS</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                value={css}
+                onChange={(e) => setCss(e.target.value)}
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Javascript</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                value={js}
+                onChange={(e) => setJs(e.target.value)}
+              ></textarea>
+            </div>
+
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+</div>
+    </div>
+  );
+};
+
+export default Createpopup;

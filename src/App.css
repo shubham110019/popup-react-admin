@@ -1,38 +1,38 @@
-.App {
-  text-align: center;
+.navbarBg{
+    background: #0d82df !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.header .navbarBg .nav-link{
+    color: #FFF !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.navbar-brand{
+    color: #FFF !important;
+}
+.campaign-dashboard-content{
+    display: flex !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.campaign-sidebar{
+    background: #41495b;
+    height: 100vh !important;
+    max-width: 268px;
+    min-width: 268px;
 }
 
-.App-link {
-  color: #61dafb;
+.campaign-drawer-container{
+    background: #e5eaf4;
+    padding: 20px !important;
+    display: flex;
+    flex: 1 1;
+    column-gap: 24px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.campaign-dashboard-drawer, .campaign-dashboard-campaigns{
+    flex: 1;
 }
+
+.dashboard-card{
+    background-color: #FFF;
+}
+
