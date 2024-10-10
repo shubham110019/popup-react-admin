@@ -36,3 +36,10 @@
     background-color: #FFF;
 }
 
+
+.sidebar-section-title p.site_name{
+    color: #FFF;
+    font-size: 24px;
+    padding: 10px;
+    margin-bottom: 0 !important;
+}

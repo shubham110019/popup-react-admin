@@ -26,6 +26,10 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         Cookies.set("token", data.token);
+        Cookies.set("userId", data.userId);
+
+        console.log(data.userId);
+
         navigate("/dashboard");
       } else {
         setMessage(data.message);
