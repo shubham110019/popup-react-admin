@@ -5,25 +5,31 @@ import Sidemenu from "./comonent/Sidemenu";
 import "../../css/user/content.css";
 import Topbar from "./comonent/Topbar";
 import Campaignsidebar from "./comonent/Campaignsidebar";
+import Popup from "./comonent/Popup";
+import Campaignpop from "./comonent/Campaignpop";
+import CampaignPreview from "./comonent/CampaignPreview";
 
 const Campaigns = () => {
   const navigate = useNavigate();
-
-  const [htmlfrm, setHtmlfrm] = useState("");  // For user input HTML
-  const [html, setHtml] = useState("");        // Full HTML with #popid
+  const [htmlfrm, setHtmlfrm] = useState("");
+  const [html, setHtml] = useState("");
   const [js, setJs] = useState("");
   const [css, setCss] = useState("");
   const [message, setMessage] = useState("");
-
   const [userId, setUserId] = useState("");
   const [popid, setPopid] = useState("");
-
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
-
   const [allpopup, setAllpopup] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedCampaignId, setSelectedCampaignId] = useState(""); // New state to hold selected campaign ID
 
+  const togglePopupCampaign = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -40,6 +46,8 @@ const Campaigns = () => {
   };
 
   const userApi = async (token) => {
+    setLoading(true);
+    setError("");
     try {
       const response = await fetch("http://localhost:9000/api/auth/user", {
         method: "GET",
@@ -49,101 +57,152 @@ const Campaigns = () => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
+      if (!response.ok) throw new Error("Failed to fetch user data");
 
       const data = await response.json();
-
       if (data.user) {
         setUserId(data.user.userId);
         setName(data.user.name);
         setLastname(data.user.lastname);
         setEmail(data.user.email);
-
-        // Fetch the allpopup data after userId is set
         allpopupview(data.user.userId);
       } else {
-        console.error("User data not found");
+        setError("User data not found");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setError("Error fetching user data. Please try again.");
       navigate("/login");
+    } finally {
+      setLoading(false);
     }
   };
 
   const allpopupview = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:9000/api/modal-data/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:9000/api/modal-data/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
-      console.log("Fetched popups:", data); // Log the data to check structure
-
       if (Array.isArray(data)) {
-        setAllpopup(data); // Ensure data is an array
+        setAllpopup(data);
+        if (data.length > 0) {
+          setSelectedCampaignId(data[0].popid); // Set default campaign ID to the first one
+        }
       } else {
-        setAllpopup([]); // Fallback to an empty array if the response is not an array
+        setAllpopup([]);
       }
     } catch (error) {
       console.error("Error fetching popup data:", error);
     }
   };
 
+  const handleCampaignClick = (id) => {
+    setSelectedCampaignId(id); // Set the selected campaign ID when clicked
+  };
+
+
   return (
     <div>
-   
+      <div className="main__content">
+        <Topbar />
+        <div className="om-app-header campaign-header">
+          <div className="left">
+            <h2>Campaign Dashboard</h2>
+          </div>
+          <div className="right">
+            <button onClick={togglePopupCampaign} className="btn btn-success">
+              Create New Campaign
+            </button>
+          </div>
+        </div>
 
-   <div className='main__content'>
-
-<Topbar/>
-         
+        <Popup isOpen={isPopupOpen} closePopup={togglePopupCampaign}>
+          <Campaignpop closePopup={togglePopupCampaign} />
+        </Popup>
 
         <div className="campaign-dashboard-content">
+          <Campaignsidebar />
+          <div className="campaign-drawer-container">
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                {allpopup.length ? (
+                  <>
+                    <div className="campaign-dashboard-drawer">
+                      <div className="dashboard-card">
+                        {allpopup.map((data) => (
+                          <div
+                            key={data._id}
+                            className={`drawer-campaign ${
+                              selectedCampaignId === data.popid ? "active" : ""
+                            }`}
+                            onClick={() => handleCampaignClick(data.popid)}
+                          >
+                            <div className="campaign-flex-wrapper">
+                              <div className="campaign-data-wrapper">
+                                <div className="campaign-data">
+                                  <div className="campaign-title">
+                                    {data.campaignName}
+                                  </div>
 
+                                  <div className="campaign-type">
+                                    {data.campaignType}
+                                  </div>
+                                </div>
 
-          
-  <Campaignsidebar/>
+                                <div className="campaign-actions">
+                                  <div className="action">Edit</div>
 
+                                  <div className="action status">
+                                    {data.status}
+                                  </div>
+                                </div>
+                              </div>
 
-  <div className="campaign-drawer-container">
-
-    
-            <div className="campaign-dashboard-drawer">
-
-              <div className="dashboard-card">
-              <h3>All Popups</h3>
-              {
-                (allpopup && Array.isArray(allpopup)) ? (
-                  allpopup.map((data) => (
-                    <div key={data._id}>
-                      <p>Popup ID: {data.popid}</p>
-                      {/* Add more fields if needed */}
+                              <div className="campaign-analytics-snapshot">
+                                <span className="visitors">
+                                  Visitors: <strong>0</strong>
+                                </span>
+                                <span className="leads">
+                                  Conversions: <strong>0</strong>
+                                </span>
+                                <span className="conversion-rate">
+                                  CR%: <strong>0</strong>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ))
+
+                    <div className="campaign-dashboard-campaigns">
+                
+                      <CampaignPreview campaignId={selectedCampaignId} userId={userId} />
+                    </div>
+                  </>
                 ) : (
-                  <p>No popups available</p>
-                )
-              }
-              </div>
-            </div>
-            <div className="campaign-dashboard-campaigns">
-            <div className="dashboard-card">
-              <h3>Preview Popup</h3>
-              {/* You can add popup preview logic here */}
-              </div>
-            </div>
-       
+                  <div className="no-campaigns">
+                    <h2>
+                      There are currently no campaigns assigned to this site.
+                    </h2>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
-
-        </div>
-
-</div>
-</div>
+      </div>
+    </div>
   );
 };
 

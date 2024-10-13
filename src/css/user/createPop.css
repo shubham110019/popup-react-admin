@@ -1,0 +1,8 @@
+.PageBodyContent{
+    background: #ddebf6 !important;
+}
+
+
+.PageSidebar{
+    height: calc(100vh - 60px);
+}

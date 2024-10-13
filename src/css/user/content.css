@@ -8,3 +8,69 @@
     padding-bottom: 70px;
     overflow: hidden;
 }
+
+.campaign-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    align-items: center;
+}
+
+
+.no-campaigns{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drawer-campaign{
+    padding: 20px;
+    border-bottom: 1px solid #d7e5ff;
+}
+
+.drawer-campaign.active{
+    background-color: #eef2f9 !important;
+}
+
+.campaign-data-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.campaign-analytics-snapshot{
+    display: flex;
+    justify-content: space-between;
+}
+
+.campaign-data{
+    margin-bottom: 8px !important;
+}
+
+.campaign-data .campaign-title{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.campaign-type, .campaign-analytics-snapshot{
+    font-size: 14px;
+}
+
+.content{
+    padding: 20px;
+}
+
+.toolbar{
+    border-bottom: 1px solid #d7e5ff;
+    padding: 16px;
+}
+
+.toolbar ul{
+    display: inline-flex;
+    column-gap: 12px;
+}
+
+.content .sub-title{
+    display: inline-flex;
+    column-gap: 12px !important;
+}
