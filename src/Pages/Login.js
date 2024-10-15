@@ -3,6 +3,8 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/login.css";
+import { setActiveSiteId, setActiveUserId } from '../redux/slices/siteSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +12,8 @@ const Login = () => {
   // const [otp, setOpt] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  const dispatch = useDispatch(); 
 
   const handlelogin = async (event) => {
     event.preventDefault();
@@ -28,7 +32,8 @@ const Login = () => {
         Cookies.set("token", data.token);
         Cookies.set("userId", data.userId);
 
-        console.log(data.userId);
+        dispatch(setActiveUserId(data.userId));
+
 
         navigate("/dashboard");
       } else {

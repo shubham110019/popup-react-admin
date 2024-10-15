@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const CampaignPreview = ({ userId, campaignId }) => {
   const [apidata, setApidata] = useState(null); // Initially set to null for proper loading behavior
@@ -37,6 +38,57 @@ const CampaignPreview = ({ userId, campaignId }) => {
     setApicampaignId(campaignId); // Update the local state with the new campaignId
   }, [userId, campaignId]);
 
+
+  const handleTrashPop = async (apicampaignId) => {
+    try {
+      const response = await fetch(
+        "http://localhost:9000/api/modal-data/",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ popid: apicampaignId, trash: 1 }),
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json(); 
+        // console.log("Popup moved to trash:", data);
+      } else {
+        // console.error("Error moving popup to trash. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error in handleTrashPop:", error);
+    }
+  };
+  
+
+
+  const handleArchivesPop = async (apicampaignId) =>{
+    try {
+      const response = await fetch(
+        "http://localhost:9000/api/modal-data/",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ popid: apicampaignId, archives: true }),
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json(); 
+        // console.log("Popup moved to trash:", data);
+      } else {
+        // console.error("Error moving popup to trash. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error in handleTrashPop:", error);
+    }
+  }
+
   return (
     <>
       <div className="dashboard-card main-campaign-cards">
@@ -44,8 +96,12 @@ const CampaignPreview = ({ userId, campaignId }) => {
 
         <div className="toolbar">
           <ul>
-            <li>Edit</li>
-            <li>Delete</li>
+            <li><Link to={`/campaigns/${apicampaignId}`} className="btn btn-primary">Edit</Link></li>
+
+
+            
+            <li><button onClick={()=>handleArchivesPop(apicampaignId)} className="btn btn-primary">Archives</button></li>
+            <li><button onClick={()=>handleTrashPop(apicampaignId)} className="btn btn-danger">Delete</button></li>
           </ul>
         </div>
 

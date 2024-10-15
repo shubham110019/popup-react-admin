@@ -63,6 +63,38 @@ const Links = () => {
                     }
                 />
 
+
+<Route
+                    path="/campaigns/:id"
+                    element={
+                        <ProtectedRoute>
+                            <Createpopup />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+<Route
+                    path="/campaigns/folder/archives"
+                    element={
+                        <ProtectedRoute>
+                            <Campaigns />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+
+
+<Route
+                    path="/campaigns/site/:id"
+                    element={
+                        <ProtectedRoute>
+                            <Campaigns />
+                        </ProtectedRoute>
+                    }
+                />
+
             </Routes>
         </>
     );

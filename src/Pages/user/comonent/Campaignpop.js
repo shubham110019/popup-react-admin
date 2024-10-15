@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
-const Campaignpop = ({ closePopup }) => {
+const Campaignpop = ({ closePopup, onCampaignAdded }) => {
   const [sitename, setSitename] = useState("");
   const [site, setSite] = useState("");
   const [token, setToken] = useState("");
@@ -12,6 +13,8 @@ const Campaignpop = ({ closePopup }) => {
   const [popid, setPopid] = useState("");
 
   const [campaignName, setCampaignName] = useState("");
+
+  const activeSiteId = useSelector((state) => state.site.activeSiteId);
 
 
   const navigate = useNavigate();
@@ -51,6 +54,8 @@ const Campaignpop = ({ closePopup }) => {
   
   useEffect(() => {
     setPopid(generateRandomString(15)); // Generate a 20-character string
+
+    setSiteId()
   }, []);
 
 
@@ -63,12 +68,14 @@ const Campaignpop = ({ closePopup }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ campaignName, popid, site, userId }),
+        body: JSON.stringify({ campaignName, popid, siteId: activeSiteId, userId }),
       });
 
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
+
+        onCampaignAdded({campaignName, popid, siteId: activeSiteId, userId});
       } else {
         setMessage(data.message);
       }
@@ -82,11 +89,12 @@ const Campaignpop = ({ closePopup }) => {
       <div className="header">
         <h4>Name your campaign</h4>
       </div>
-      <div className="content">
+      <div className="content-po">
         {message && <p>{message}</p>}
         <form onSubmit={handleCreatesModal}>
 
-          <input type="text" className="form-control" value={popid}/>
+          <input type="text" className="form-control d-none" value={popid}/>
+
           <div className="form-group ">
             <label htmlFor="SiteName" className="col-form-label">
             What do you want to call your popup campaign?
@@ -102,7 +110,7 @@ const Campaignpop = ({ closePopup }) => {
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="form-group d-none">
             <label htmlFor="Domain" className="col-form-label">
             Which website(s) do you want to load this campaign on?
             </label>
@@ -110,9 +118,7 @@ const Campaignpop = ({ closePopup }) => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="https://example.com"
-                value={site}
-                onChange={(e) => setSite(e.target.value)}
+                value={activeSiteId}
               />
             </div>
           </div>

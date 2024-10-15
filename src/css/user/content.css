@@ -74,3 +74,19 @@
     display: inline-flex;
     column-gap: 12px !important;
 }
+
+
+
+.sidebar-section-title .websitelist ul li{
+    color: #fff;
+}
+
+.sidebar-section-title .websitelist ul li.active{
+    background: #0d82df !important;
+}
+
+.sidebar-section-title .websitelist ul li a{
+    color: #fff;
+    display: block;
+    padding: 8px 10px;
+}

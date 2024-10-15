@@ -60,6 +60,8 @@ const [lastname, setLastname] = useState("");
       if (response.ok) {
         Cookies.set("token", data.token);
 
+        userApi(data.token)
+
         navigate("/dashboard");
         setMessage("OTP verified successfully! You are now registered.");
       } else {
@@ -71,6 +73,39 @@ const [lastname, setLastname] = useState("");
       );
     }
   };
+
+
+
+
+  const userApi = async (token) => {
+    try {
+      const response = await fetch("http://localhost:9000/api/auth/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const data = await response.json();
+
+      // Check if user exists in data
+      if (data.user) {
+        Cookies.set("userId", data.user.userId);
+      } else {
+        console.error("User data not found");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // Optionally navigate to login or show an error message
+      navigate("/login");
+    }
+  };
+
 
   return (
     <>

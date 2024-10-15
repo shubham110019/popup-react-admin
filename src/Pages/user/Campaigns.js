@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sidemenu from "./comonent/Sidemenu";
 import "../../css/user/content.css";
 import Topbar from "./comonent/Topbar";
@@ -8,24 +8,19 @@ import Campaignsidebar from "./comonent/Campaignsidebar";
 import Popup from "./comonent/Popup";
 import Campaignpop from "./comonent/Campaignpop";
 import CampaignPreview from "./comonent/CampaignPreview";
+import { useSelector } from 'react-redux';
 
 const Campaigns = () => {
   const navigate = useNavigate();
-  const [htmlfrm, setHtmlfrm] = useState("");
-  const [html, setHtml] = useState("");
-  const [js, setJs] = useState("");
-  const [css, setCss] = useState("");
-  const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
-  const [popid, setPopid] = useState("");
-  const [name, setName] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
   const [allpopup, setAllpopup] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedCampaignId, setSelectedCampaignId] = useState(""); // New state to hold selected campaign ID
+
+  // Get activeSiteId from Redux
+  const activeSiteId = useSelector((state) => state.site.activeSiteId);
 
   const togglePopupCampaign = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -39,6 +34,13 @@ const Campaigns = () => {
       userApi(token);
     }
   }, [navigate]);
+
+  // Re-trigger API call when activeSiteId changes
+  useEffect(() => {
+    if (userId && activeSiteId) {
+      allpopupview(userId, activeSiteId);
+    }
+  }, [userId, activeSiteId]);
 
   const logout = () => {
     Cookies.remove("token");
@@ -62,10 +64,9 @@ const Campaigns = () => {
       const data = await response.json();
       if (data.user) {
         setUserId(data.user.userId);
-        setName(data.user.name);
-        setLastname(data.user.lastname);
-        setEmail(data.user.email);
-        allpopupview(data.user.userId);
+        // setName(data.user.name);
+        // setLastname(data.user.lastname);
+        // setEmail(data.user.email);
       } else {
         setError("User data not found");
       }
@@ -78,10 +79,10 @@ const Campaigns = () => {
     }
   };
 
-  const allpopupview = async (userId) => {
+  const allpopupview = async (userId, activeSiteId) => {
     try {
       const response = await fetch(
-        `http://localhost:9000/api/modal-data/${userId}`,
+        `http://localhost:9000/api/modal-data/site/${userId}/${activeSiteId}`,
         {
           method: "GET",
           headers: {
@@ -89,25 +90,45 @@ const Campaigns = () => {
           },
         }
       );
-
+  
       const data = await response.json();
+  
+      console.log(data);
+  
       if (Array.isArray(data)) {
-        setAllpopup(data);
-        if (data.length > 0) {
-          setSelectedCampaignId(data[0].popid); // Set default campaign ID to the first one
+        // Filter out popups where trash !== 0 OR archives is true
+        const validPopups = data.filter(
+          (popup) => popup.trash === 0 && popup.archives !== true
+        );
+  
+        if (validPopups.length > 0) {
+          setAllpopup(validPopups);
+          setSelectedCampaignId(validPopups[0].popid); // Set default campaign ID to the first one
+        } else {
+          setAllpopup([]);
         }
       } else {
         setAllpopup([]);
       }
+  
     } catch (error) {
       console.error("Error fetching popup data:", error);
     }
   };
+  
+  
 
   const handleCampaignClick = (id) => {
     setSelectedCampaignId(id); // Set the selected campaign ID when clicked
   };
 
+
+  
+
+  const handleCampaignAdded = (newCampaign) =>{
+    setAllpopup([...allpopup, newCampaign])
+    togglePopupCampaign()
+  }
 
   return (
     <div>
@@ -125,7 +146,7 @@ const Campaigns = () => {
         </div>
 
         <Popup isOpen={isPopupOpen} closePopup={togglePopupCampaign}>
-          <Campaignpop closePopup={togglePopupCampaign} />
+          <Campaignpop closePopup={togglePopupCampaign} onCampaignAdded={handleCampaignAdded}/>
         </Popup>
 
         <div className="campaign-dashboard-content">
@@ -160,7 +181,7 @@ const Campaigns = () => {
                                 </div>
 
                                 <div className="campaign-actions">
-                                  <div className="action">Edit</div>
+                                  <div className="action"><Link to={`/campaigns/${data.popid}`}>Edit</Link></div>
 
                                   <div className="action status">
                                     {data.status}
@@ -186,7 +207,6 @@ const Campaigns = () => {
                     </div>
 
                     <div className="campaign-dashboard-campaigns">
-                
                       <CampaignPreview campaignId={selectedCampaignId} userId={userId} />
                     </div>
                   </>

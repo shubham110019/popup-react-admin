@@ -125,19 +125,6 @@ const Createpopup = () => {
       .trim(); // Remove leading/trailing spaces
   };
 
-  const generateRandomString = (length) => {
-    const characters = "abcdefghijklmnopqrstuvwxyz";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-
-  useEffect(() => {
-    setPopid(generateRandomString(10));
-  }, []);
 
   return (
     <div>
@@ -155,16 +142,6 @@ const Createpopup = () => {
                     type="type"
                     className="form-control"
                     value={userId}
-                    readOnly
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="popupId">Popup ID</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={popid}
                     readOnly
                   />
                 </div>
@@ -203,7 +180,12 @@ const Createpopup = () => {
               </form>
             </div>
 
-            <div className="PageBodyContent col-md-9"></div>
+            <div className="PageBodyContent col-md-9">
+
+            
+
+
+            </div>
           </div>
 
         </div>

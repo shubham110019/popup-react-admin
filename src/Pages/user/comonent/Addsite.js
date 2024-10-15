@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
-const Addsite = ({ closePopup }) => {
+const Addsite = ({ closePopup, onSiteAdded }) => {
   const [sitename, setSitename] = useState("");
   const [domain, setDomain] = useState("");
   const [token, setToken] = useState("");
@@ -18,9 +18,6 @@ const Addsite = ({ closePopup }) => {
     setUserId(userId);
   }, [navigate]);
 
-
-
-
   function hashDomain(domain) {
     let hash = 0;
     for (let i = 0; i < domain.length; i++) {
@@ -31,21 +28,14 @@ const Addsite = ({ closePopup }) => {
     return Math.abs(hash);
   }
 
-  // Function to extract only the root domain
   const extractRootDomain = (url) => {
     let hostname;
-
-    // Remove protocol (http, https, etc.)
     if (url.indexOf("//") > -1) {
       hostname = url.split("/")[2];
     } else {
       hostname = url.split("/")[0];
     }
-
-    // Remove port number and parameters
     hostname = hostname.split(":")[0].split("?")[0];
-
-    // Remove 'www.' if it exists
     if (hostname.startsWith("www.")) {
       hostname = hostname.substring(4);
     }
@@ -55,10 +45,8 @@ const Addsite = ({ closePopup }) => {
 
   const handleWebsitesubmit = async (event) => {
     event.preventDefault();
-    const formattedDomain = extractRootDomain(domain); // Extract root domain
-
+    const formattedDomain = extractRootDomain(domain); 
     const websiteIdNumber = hashDomain(formattedDomain); 
-
 
     try {
       const response = await fetch("http://localhost:9000/api/website", {
@@ -72,6 +60,7 @@ const Addsite = ({ closePopup }) => {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
+        onSiteAdded({ sitename, siteId: websiteIdNumber }); // Send new site data to parent
       } else {
         setMessage(data.message);
       }
@@ -85,7 +74,7 @@ const Addsite = ({ closePopup }) => {
       <div className="header">
         <h4>Add New Site</h4>
       </div>
-      <div className="content">
+      <div className="content-pop">
         {message && <p>{message}</p>}
         <form onSubmit={handleWebsitesubmit}>
           <div className="form-group row">
